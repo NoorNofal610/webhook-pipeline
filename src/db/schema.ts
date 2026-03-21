@@ -1,4 +1,7 @@
-import { pgTable, serial, text, jsonb, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, serial, text, jsonb, timestamp, integer, pgEnum } from "drizzle-orm/pg-core";
+
+// Delivery Status Enum
+export const deliveryStatusEnum = pgEnum("delivery_status", ["pending", "success", "failed"]);
 
 // Pipelines
 export const pipelines = pgTable("pipelines", {
@@ -30,7 +33,7 @@ export const deliveryAttempts = pgTable("delivery_attempts", {
   id: serial("id").primaryKey(),
   jobId: serial("job_id").references(() => jobs.id),
   subscriberId: serial("subscriber_id").references(() => subscribers.id),
-  status: text("status").default("pending").notNull(),
+  status: deliveryStatusEnum("status").default("pending").notNull(),
   attemptNumber: integer("attempt_number").default(1).notNull(),
   lastAttempt: timestamp("last_attempt").defaultNow().notNull(),
   nextRetryAt: timestamp("next_retry_at"),

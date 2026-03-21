@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { createPipeline, addSubscribers, getAllPipelines, getPipelineById, deletePipeline, deleteSubscribersByPipeline, updatePipeline, getSubscribersByPipeline } from '../db/queries/pipelines.js';
+import { JobQueueManager } from '../services/JobQueueManager.js';
 
 export const pipelinesRouter = Router()
 
@@ -149,3 +150,4 @@ pipelinesRouter.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Database error" })
   }
 })
+
