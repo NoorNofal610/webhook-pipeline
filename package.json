@@ -5,7 +5,14 @@
   "main": "index.js",
   "scripts": {
     "dev": "npx tsc && node dist/server.js",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "build": "npx tsc",
+    "test": "npx tsx src/tests/test-processing.ts",
+    "docker:build": "docker build -t webhook-pipeline .",
+    "docker:run": "docker run -p 3000:3000 webhook-pipeline",
+    "docker:compose": "docker-compose up --build",
+    "docker:compose:down": "docker-compose down --volumes",
+    "docker:compose:logs": "docker-compose logs -f"
   },
   "keywords": [],
   "author": "",
