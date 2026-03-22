@@ -1,34 +1,8 @@
 import { Router } from 'express';
 import { getAllJobs, getJobById, getJobsByStatus, updateJobStatus } from '../db/queries/jobs.js';
-
-class JobQueueManager {
-  async getQueueStats() {
-    return { pending: 0, completed: 0, failed: 0 };
-  }
-  async retryFailedJobs() {
-    return 0;
-  }
-}
-
-class JobWorker {
-  private isRunning = false;
-  
-  async start() {
-    this.isRunning = true;
-    console.log("Worker started (placeholder)");
-  }
-  
-  async stop() {
-    this.isRunning = false;
-    console.log("Worker stopped (placeholder)");
-  }
-  
-  getStatus() {
-    return { isRunning: this.isRunning };
-  }
-}
-
-const jobWorker = new JobWorker();
+import { JobQueueManager } from '../services/JobQueueManager.js';
+import { jobWorker } from '../workers/JobWorker.js';
+import { getDeliveryAttemptsByJob } from '../db/queries/deliveryAttempts.js';
 
 export const jobsRouter = Router()
 
@@ -88,6 +62,18 @@ jobsRouter.put("/:id/status", async (req, res) => {
   } catch (error) {
     console.error(error)
     res.status(500).json({ error: "Database error" })
+  }
+})
+
+// Get delivery attempts for a job
+jobsRouter.get("/:id/delivery-attempts", async (req, res) => {
+  try {
+    const jobId = parseInt(req.params.id);
+    const attempts = await getDeliveryAttemptsByJob(jobId);
+    res.json(attempts);
+  } catch (error) {
+    console.error("Delivery attempts error:", error);
+    res.status(500).json({ error: "Failed to get delivery attempts" });
   }
 })
 

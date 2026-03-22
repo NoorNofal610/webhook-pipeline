@@ -76,7 +76,17 @@ export async function updateDeliveryAttempt(
 export async function getDeliveryAttemptsByJob(jobId: number): Promise<DeliveryAttempt[]> {
   try {
     const attempts = await db
-      .select()
+      .select({
+        id: deliveryAttempts.id,
+        jobId: deliveryAttempts.jobId,
+        subscriberId: deliveryAttempts.subscriberId,
+        status: deliveryAttempts.status,
+        attemptNumber: deliveryAttempts.attemptNumber,
+        lastAttempt: deliveryAttempts.lastAttempt,
+        nextRetryAt: deliveryAttempts.nextRetryAt,
+        errorMessage: deliveryAttempts.errorMessage,
+        createdAt: deliveryAttempts.createdAt
+      })
       .from(deliveryAttempts)
       .where(eq(deliveryAttempts.jobId, jobId))
       .orderBy(deliveryAttempts.createdAt);
@@ -93,7 +103,17 @@ export async function getFailedAttemptsForRetry(): Promise<DeliveryAttempt[]> {
   try {
     const now = new Date();
     const attempts = await db
-      .select()
+      .select({
+        id: deliveryAttempts.id,
+        jobId: deliveryAttempts.jobId,
+        subscriberId: deliveryAttempts.subscriberId,
+        status: deliveryAttempts.status,
+        attemptNumber: deliveryAttempts.attemptNumber,
+        lastAttempt: deliveryAttempts.lastAttempt,
+        nextRetryAt: deliveryAttempts.nextRetryAt,
+        errorMessage: deliveryAttempts.errorMessage,
+        createdAt: deliveryAttempts.createdAt
+      })
       .from(deliveryAttempts)
       .where(
         and(
@@ -113,7 +133,17 @@ export async function getFailedAttemptsForRetry(): Promise<DeliveryAttempt[]> {
 export async function getDeliveryAttemptsBySubscriber(subscriberId: number): Promise<DeliveryAttempt[]> {
   try {
     const attempts = await db
-      .select()
+      .select({
+        id: deliveryAttempts.id,
+        jobId: deliveryAttempts.jobId,
+        subscriberId: deliveryAttempts.subscriberId,
+        status: deliveryAttempts.status,
+        attemptNumber: deliveryAttempts.attemptNumber,
+        lastAttempt: deliveryAttempts.lastAttempt,
+        nextRetryAt: deliveryAttempts.nextRetryAt,
+        errorMessage: deliveryAttempts.errorMessage,
+        createdAt: deliveryAttempts.createdAt
+      })
       .from(deliveryAttempts)
       .where(eq(deliveryAttempts.subscriberId, subscriberId))
       .orderBy(deliveryAttempts.createdAt);
@@ -129,7 +159,17 @@ export async function getDeliveryAttemptsBySubscriber(subscriberId: number): Pro
 export async function getDeliveryAttemptsByStatus(status: 'pending' | 'success' | 'failed'): Promise<DeliveryAttempt[]> {
   try {
     const attempts = await db
-      .select()
+      .select({
+        id: deliveryAttempts.id,
+        jobId: deliveryAttempts.jobId,
+        subscriberId: deliveryAttempts.subscriberId,
+        status: deliveryAttempts.status,
+        attemptNumber: deliveryAttempts.attemptNumber,
+        lastAttempt: deliveryAttempts.lastAttempt,
+        nextRetryAt: deliveryAttempts.nextRetryAt,
+        errorMessage: deliveryAttempts.errorMessage,
+        createdAt: deliveryAttempts.createdAt
+      })
       .from(deliveryAttempts)
       .where(eq(deliveryAttempts.status, status))
       .orderBy(deliveryAttempts.createdAt);
