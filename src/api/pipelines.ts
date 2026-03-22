@@ -151,3 +151,34 @@ pipelinesRouter.delete("/:id", async (req, res) => {
   }
 })
 
+// Webhook Endpoint
+pipelinesRouter.post("/webhook", async (req, res) => {
+  try {
+    const token = req.headers["x-webhook-token"];
+    if (token !== process.env.WEBHOOK_SECRET) {
+      return res.status(403).json({ error: "Forbidden" });
+    }
+
+    const { pipelineId, payload } = req.body;
+    if (!pipelineId || !payload) {
+      return res.status(400).json({ error: "Missing pipelineId or payload" });
+    }
+
+    if (typeof payload !== "object") {
+      return res.status(400).json({ error: "Payload must be an object" });
+    }
+
+    // Use JobQueueManager to enqueue the job
+    const queueManager = new JobQueueManager();
+    const job = await queueManager.enqueueJob(pipelineId, payload);
+
+    res.status(201).json({
+      message: "Job queued successfully",
+      jobId: job.id,
+      status: job.status
+    });
+  } catch (err) {
+    console.error("Webhook Error:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
